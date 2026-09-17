@@ -6,3 +6,5 @@
 - All data is deterministic synthetic teaching content; names, prices, dates and `.test` email addresses are invented. See `docs/DATASET.md` and `src/domain/dataset.ts` for provenance and generation rules. No private source, real customer records, credentials or telemetry were copied.
 - `docs/screenshots/desktop.png` and `mobile.png` are actual Playwright captures of the running app after executing real SQL on the synthetic database. They are not mockups or generated images.
 - Source is MIT licensed. Dependency licenses remain attached to their respective code/assets.
+
+The refinement pass recaptured desktop/mobile screens from the working app, and added `history-desktop.png` and `history-mobile.png` showing real successful query history. `query-lens-refinement-before.png` is the actual earlier UI, retained for comparison. No screenshot is AI-generated or edited.

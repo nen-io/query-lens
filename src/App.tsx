@@ -13,6 +13,7 @@ import {
 import { examples, type TableName } from "./domain/dataset";
 import { Schema } from "./components/Schema";
 import { Results } from "./components/Results";
+import { QueryHistory } from "./components/QueryHistory";
 import {
   QueryClient,
   type ClientState,
@@ -26,9 +27,12 @@ const initial: ClientState = {
   error: "",
   notice: "",
   previous: false,
+  resultVersion: 0,
+  history: [],
 };
 export default function App() {
   const lineNumbers = useRef<HTMLDivElement>(null);
+  const editor = useRef<HTMLTextAreaElement>(null);
   const [sql, setSql] = useState<string>(examples[0].sql);
   const [selectedExample, setSelectedExample] = useState("revenue");
   const [state, setState] = useState<ClientState>(initial);
@@ -60,6 +64,11 @@ export default function App() {
   function explore(name: TableName) {
     setSelectedExample("custom");
     setSql(`SELECT *\nFROM ${name}\nLIMIT 20;`);
+  }
+  function loadSql(text: string) {
+    setSelectedExample("custom");
+    setSql(text);
+    editor.current?.focus();
   }
   const totalRows = state.schema.reduce(
     (total, table) => total + table.count,
@@ -156,6 +165,7 @@ export default function App() {
                 </label>
                 <textarea
                   id="sql-query"
+                  ref={editor}
                   aria-label="SQL query"
                   spellCheck={false}
                   onScroll={(event) => {
@@ -220,6 +230,11 @@ export default function App() {
                 <span>2 second deadline</span>
               </div>
             </section>
+            <QueryHistory
+              entries={state.history}
+              onLoad={loadSql}
+              onClear={() => client.clearHistory()}
+            />
             {state.error && (
               <div className="error-banner" role="alert">
                 <div>
@@ -247,7 +262,12 @@ export default function App() {
                 {state.notice}
               </div>
             )}
-            <Results result={state.result} stale={stale} />
+            <Results
+              key={state.resultVersion}
+              result={state.result}
+              stale={stale}
+              onLoadSql={loadSql}
+            />
             <div className="workspace-footer">
               <span>
                 <i />{" "}

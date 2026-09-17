@@ -147,3 +147,77 @@ describe("worker lifecycle fencing", () => {
     expect(states).toHaveLength(count);
   });
 });
+
+it("keeps a bounded, deduplicated history of accepted successful SQL without result copies", () => {
+  vi.useFakeTimers();
+  const { client, ready, send } = setup();
+  ready();
+  for (let index = 1; index <= 12; index++) {
+    client.run(`SELECT ${index}`);
+    send({
+      type: "result",
+      requestId: index,
+      result: { ...result, sql: `SELECT ${index}`, rows: [[index]] },
+    });
+  }
+  expect(client.snapshot().history).toHaveLength(10);
+  expect(client.snapshot().history[0]).toMatchObject({
+    sql: "SELECT 12",
+    rowCount: 1,
+  });
+  expect(client.snapshot().history[0]).not.toHaveProperty("rows");
+  client.run("SELECT 3");
+  send({
+    type: "result",
+    requestId: 13,
+    result: { ...result, sql: "SELECT 3" },
+  });
+  expect(client.snapshot().history.map((entry) => entry.sql)).toEqual([
+    "SELECT 3",
+    "SELECT 12",
+    "SELECT 11",
+    "SELECT 10",
+    "SELECT 9",
+    "SELECT 8",
+    "SELECT 7",
+    "SELECT 6",
+    "SELECT 5",
+    "SELECT 4",
+  ]);
+  client.dispose();
+});
+
+it("history excludes errors, cancellation and stale replies; clearing keeps the current result", () => {
+  vi.useFakeTimers();
+  const { client, ready, send } = setup();
+  ready();
+  client.run("SELECT 1");
+  send({ type: "result", requestId: 1, result });
+  client.run("SELECT FROM broken");
+  send({ type: "query-error", requestId: 2, error: "syntax error" });
+  expect(client.snapshot().history).toHaveLength(1);
+  client.run("SELECT 2");
+  client.cancel();
+  send(
+    { type: "result", requestId: 3, result: { ...result, sql: "SELECT 2" } },
+    0,
+  );
+  expect(client.snapshot().history.map((entry) => entry.sql)).toEqual([
+    "SELECT 1",
+  ]);
+  client.clearHistory();
+  expect(client.snapshot().history).toEqual([]);
+  expect(client.snapshot().result).toEqual(result);
+  expect(client.snapshot().resultVersion).toBe(1);
+  ready();
+  client.run("SELECT 3");
+  send({
+    type: "result",
+    requestId: 4,
+    result: { ...result, sql: "SELECT 3" },
+  });
+  expect(client.snapshot().history.map((entry) => entry.sql)).toEqual([
+    "SELECT 3",
+  ]);
+  client.dispose();
+});

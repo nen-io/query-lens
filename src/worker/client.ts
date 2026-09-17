@@ -16,6 +16,14 @@ export type ClientState = {
   error: string;
   notice: string;
   previous: boolean;
+  resultVersion: number;
+  history: readonly QueryHistoryEntry[];
+};
+export type QueryHistoryEntry = {
+  sql: string;
+  rowCount: number;
+  durationMs: number;
+  truncated: boolean;
 };
 export class QueryClient {
   private worker?: WorkerPort;
@@ -29,6 +37,8 @@ export class QueryClient {
     error: "",
     notice: "",
     previous: false,
+    resultVersion: 0,
+    history: [],
   };
   constructor(
     private factory: () => WorkerPort,
@@ -36,6 +46,10 @@ export class QueryClient {
   ) {}
   snapshot(): ClientState {
     return { ...this.state };
+  }
+  clearHistory(): void {
+    this.state = { ...this.state, history: [] };
+    this.emit();
   }
   start(): void {
     this.spawn("");
@@ -133,6 +147,20 @@ export class QueryClient {
             ...this.state,
             status: "ready",
             result: message.result,
+            resultVersion: this.state.resultVersion + 1,
+            // Record only accepted replies after epoch/request fencing. Keep SQL
+            // and small summaries, never ten copies of a potentially 1 MiB result.
+            history: [
+              {
+                sql: message.result.sql,
+                rowCount: message.result.rows.length,
+                durationMs: message.result.durationMs,
+                truncated: message.result.truncated,
+              },
+              ...this.state.history
+                .filter((entry) => entry.sql !== message.result.sql)
+                .slice(0, 9),
+            ],
             previous: false,
             error: "",
             notice: "",

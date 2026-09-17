@@ -15,9 +15,9 @@ npx prettier --check src tests scripts
 | Check                                    | Observed result                                                               |
 | ---------------------------------------- | ----------------------------------------------------------------------------- |
 | Strict TypeScript (`npm run typecheck`)  | Passed                                                                        |
-| Vitest (`npm test`)                      | 86 tests passed across 3 files                                                |
+| Vitest (`npm test`)                      | 90 tests passed across 3 files                                                |
 | Production compilation (`npm run build`) | Passed; local worker and WASM emitted                                         |
-| Chromium journeys (`npm run test:e2e`)   | 12 tests passed                                                               |
+| Chromium journeys (`npm run test:e2e`)   | 13 tests passed                                                               |
 | Source/test/script formatting            | Passed with pinned Prettier                                                   |
 | Independent browser review               | No uncaught page errors or document overflow at 1440, 720, 390 and 320 pixels |
 | Independent axe WCAG 2/2.1 AA scan       | Zero reported violations in the reviewed ready state                          |
@@ -56,3 +56,11 @@ No screenshot is a mockup or generated illustration. Query duration displayed in
 Tests run in desktop Chromium, including emulated narrow viewports; they do not certify Safari, Firefox, real iOS/Android hardware, assistive technologies or spreadsheet applications. No load benchmark, formal security audit or broad fuzzing claim is made. Watchdog tests prove worker replacement/recovery in this environment; browser suspension can delay timers. The native SQLite allocation test proves its own heap guard, not a bound on all browser/WASM/JavaScript memory. CSV defenses reduce known formula execution risks but spreadsheet import behavior varies.
 
 Publication, live URL verification and clean-clone verification are separate release checks. Those are not inferred from a passing local test suite.
+
+## Refinement regression evidence
+
+Before implementation, the actual chart-domain test ignored a requested second numeric column and the client had no recoverable history; both assertions failed. After implementation,90 unit/integration tests and13 Chromium journeys pass. New cases verify duplicate-alias column indices, invalid/NULL/text metric rejection, ten-entry eviction, exact-SQL deduplication, no result copies, error/cancel/stale exclusion, and clear preserving the visible result. The browser changes revenue to units, executes a second query, loads earlier SQL without changing rows, inspects/restores result source and clears history without clearing output.
+
+All native SQLite policy/read-only/resource/cancellation and production-subpath tests remain in the suite. The screenshot journey now captures the history disclosure and chart selectors. `screenshots/query-lens-refinement-before.png` records the earlier real UI for comparison. No new persistence or network dependency was added.
+
+The history workflow additionally captures [expanded desktop history](screenshots/history-desktop.png) and [expanded mobile history](screenshots/history-mobile.png), checks390px overflow, and performs source/history restoration on the mobile layout.

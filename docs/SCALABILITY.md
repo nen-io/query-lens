@@ -38,3 +38,7 @@ Use a bounded job queue only when asynchronous execution becomes a product need;
 ## Consistency now
 
 Every successful query carries captured SQL and request identity. Editor changes do not rewrite those results; the UI marks them previous until an explicit matching run succeeds. Old worker epochs cannot overwrite a new worker. All cancellations/restarts return to the same seed. No durable writes, transaction history, multiuser consistency or server guarantees are implied.
+
+## Refinement costs
+
+History adds at most200KiB of SQL text measured as UTF-8 input bytes, plus summaries and JavaScript string/object overhead; it does not keep ten bounded result copies. Exact-text deduplication scans at most ten strings. Eligible chart columns are derived over at most20 rows and40 columns; selected series remain inside the original envelope. UI selection/history does not change worker concurrency, native heap limits, execution watchdog or output limits. No benchmark is claimed.

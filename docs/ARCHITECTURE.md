@@ -78,3 +78,11 @@ Checked during implementation on 17 September 2026:
 - [SQLite quoting compatibility](https://www.sqlite.org/lang_keywords.html) and [SELECT grammar](https://www.sqlite.org/lang_select.html): single quotes can denote identifiers in identifier-only positions; native parameter validation distinguishes these from ordinary values.
 - [OWASP CSV injection](https://owasp.org/www-community/attacks/CSV_Injection): dangerous spreadsheet prefixes and export caveats.
 - [Vite workers](https://vite.dev/guide/features.html#web-workers) and [static deployment](https://vite.dev/guide/static-deploy.html): module worker and relative subpath assets.
+
+## Refinement: result identity, history and chart selection
+
+The client appends history only inside the already-fenced successful-result branch. History retains at most ten distinct exact SQL texts plus row-count/truncation/duration summaries; it stores no rows. Re-running identical SQL moves its latest summary to the front. Failures and obsolete replies do not enter history. `clearHistory` changes only that collection, so a valid in-flight query may subsequently complete into the newly empty history.
+
+A monotonically increasing `resultVersion` identifies each accepted result in React. `Results` is keyed by this version, resetting view/column choices for a new execution without effects or stale intermediate renders. Editor changes do not change result identity. History and source-SQL controls load the editor without executing; existing captured-SQL comparison determines whether visible results are previous. SQL is rendered as DOM text and history remains memory-only until reload.
+
+`chartColumns` derives eligible text/numeric column indices using the same finite-value and2–20-row/truncation envelope. Explicit indices distinguish duplicate aliases. `chartData` validates a requested pair against those candidates; it never coerces NULL/text into numbers. Chart selection does not reorder or mutate table/export rows. The current [React derived-state guidance](https://react.dev/learn/you-might-not-need-an-effect) and [Playwright assertions](https://playwright.dev/docs/test-assertions) informed this refinement.

@@ -1,16 +1,30 @@
 import { ArrowDownToLine, BarChart3, Table2 } from "lucide-react";
 import { useState } from "react";
 import type { QueryResult } from "../domain/query-engine";
-import { chartData, toCsv } from "../domain/results";
+import {
+  chartColumns,
+  chartData,
+  toCsv,
+  type ChartSelection,
+} from "../domain/results";
 export function Results({
   result,
   stale,
+  onLoadSql,
 }: {
   result?: QueryResult;
   stale: boolean;
+  onLoadSql: (sql: string) => void;
 }) {
   const [view, setView] = useState<"table" | "chart">("table");
-  const chart = result ? chartData(result) : null;
+  const [selection, setSelection] = useState<ChartSelection | undefined>();
+  const chart = result ? chartData(result, selection) : null;
+  const columns = result ? chartColumns(result) : { labels: [], values: [] };
+  const labelIndex = selection?.labelIndex ?? columns.labels[0];
+  const valueIndex =
+    selection?.valueIndex ??
+    columns.values.find((i) => result?.columns[i].endsWith("_cents")) ??
+    columns.values[0];
   function download() {
     if (!result) return;
     const url = URL.createObjectURL(
@@ -88,41 +102,89 @@ export function Results({
                 : "Table is the complete result view"}
             </span>
           </div>
+          <details className="result-source">
+            <summary>SQL behind this result</summary>
+            <pre>{result.sql}</pre>
+            <button onClick={() => onLoadSql(result.sql)}>
+              Load result SQL
+            </button>
+            <span>Loads the editor without running a query.</span>
+          </details>
           {view === "chart" && chart ? (
-            <div
-              className="result-chart"
-              role="img"
-              aria-label={`Bar chart of ${chart.valueColumn} by ${chart.labelColumn}. The table contains all exact values.`}
-            >
-              <div className="chart-caption">
-                <strong>{chart.valueColumn.replaceAll("_", " ")}</strong>
-                <span>{chart.unit}</span>
+            <>
+              <div className="chart-selectors">
+                <label>
+                  Chart labels
+                  <select
+                    value={labelIndex}
+                    onChange={(event) =>
+                      setSelection({
+                        labelIndex: Number(event.target.value),
+                        valueIndex,
+                      })
+                    }
+                  >
+                    {columns.labels.map((i) => (
+                      <option key={i} value={i}>
+                        {result.columns[i]} · column {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Chart metric
+                  <select
+                    value={valueIndex}
+                    onChange={(event) =>
+                      setSelection({
+                        labelIndex,
+                        valueIndex: Number(event.target.value),
+                      })
+                    }
+                  >
+                    {columns.values.map((i) => (
+                      <option key={i} value={i}>
+                        {result.columns[i]} · column {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               </div>
-              {(() => {
-                const maximum = Math.max(
-                  1,
-                  ...chart.points.map((point) => Math.abs(point.value)),
-                );
-                return chart.points.map((point, index) => (
-                  <div className="chart-row" key={index}>
-                    <span>{point.label}</span>
-                    <div className="chart-bar-track">
-                      <i
-                        className={`chart-bar ${point.value < 0 ? "negative" : ""}`}
-                        style={{
-                          width: `${(Math.abs(point.value) / maximum) * 100}%`,
-                        }}
-                      />
+              <div
+                className="result-chart"
+                role="img"
+                aria-label={`Bar chart of ${chart.valueColumn} by ${chart.labelColumn}. The table contains all exact values.`}
+              >
+                <div className="chart-caption">
+                  <strong>{chart.valueColumn.replaceAll("_", " ")}</strong>
+                  <span>{chart.unit}</span>
+                </div>
+                {(() => {
+                  const maximum = Math.max(
+                    1,
+                    ...chart.points.map((point) => Math.abs(point.value)),
+                  );
+                  return chart.points.map((point, index) => (
+                    <div className="chart-row" key={index}>
+                      <span>{point.label}</span>
+                      <div className="chart-bar-track">
+                        <i
+                          className={`chart-bar ${point.value < 0 ? "negative" : ""}`}
+                          style={{
+                            width: `${(Math.abs(point.value) / maximum) * 100}%`,
+                          }}
+                        />
+                      </div>
+                      <strong>{point.value.toLocaleString()}</strong>
                     </div>
-                    <strong>{point.value.toLocaleString()}</strong>
-                  </div>
-                ));
-              })()}
-              <p>
-                Bars show magnitude. Negative values are marked with a minus
-                sign and amber fill; zero stays zero.
-              </p>
-            </div>
+                  ));
+                })()}
+                <p>
+                  Bars show magnitude. Negative values are marked with a minus
+                  sign and amber fill; zero stays zero.
+                </p>
+              </div>
+            </>
           ) : (
             <div
               className="result-table-scroll"

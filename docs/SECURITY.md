@@ -49,3 +49,7 @@ No localStorage, IndexedDB, cookies or service worker persistence exists. SQL/re
 sql.js and its WASM are pinned from npm, with a lockfile; SQLite is public domain and sql.js is MIT licensed. Use `npm ci`, review updates and rerun the policy/engine suite. Install-time audit found no known vulnerabilities; that is not a security audit or a future guarantee. No penetration test or fuzz campaign is claimed.
 
 Use repository private vulnerability reporting when available, or contact the owner through their public GitHub profile to arrange a private channel. Share an affected revision and minimal synthetic reproducer, not sensitive SQL or exploit details in a public issue. No reporting address is invented.
+
+## Refinement boundary
+
+Recent-query history is memory-only, capped at ten distinct already-validated successful SQL strings (each ≤20KiB) plus small summaries. It contains no result rows and is not sent or saved anywhere. Clear removes history references without claiming secure erasure of JavaScript memory; active/result SQL remains visible separately. Cancelled/stale worker replies cannot populate it. Loading history/source SQL requires a separate Run before execution and still passes the unchanged native SQL policy. History/source views render text through React. Chart choices accept only validated column positions with finite numeric rows; they add no HTML or SQL execution path.

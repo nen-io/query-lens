@@ -83,3 +83,39 @@ describe("chart eligibility", () => {
     ).toBeNull();
   });
 });
+
+it("charts the chosen numeric column by position, including duplicate aliases", () => {
+  const chosen = chartData(
+    {
+      ...result,
+      columns: ["city", "value", "value"],
+      rows: [
+        ["Taipei", 100, -4],
+        ["Tainan", 200, 0],
+      ],
+    },
+    { labelIndex: 0, valueIndex: 2 },
+  );
+  expect(chosen?.points).toEqual([
+    { label: "Taipei", value: -4 },
+    { label: "Tainan", value: 0 },
+  ]);
+});
+
+it("rejects invalid chart choices instead of coercing text, NULL or a missing column", () => {
+  expect(chartData(result, { labelIndex: 0, valueIndex: 0 })).toBeNull();
+  expect(chartData(result, { labelIndex: 1, valueIndex: 1 })).toBeNull();
+  expect(chartData(result, { labelIndex: 0, valueIndex: 20 })).toBeNull();
+  expect(
+    chartData(
+      {
+        ...result,
+        rows: [
+          ["a", null],
+          ["b", 2],
+        ],
+      },
+      { labelIndex: 0, valueIndex: 1 },
+    ),
+  ).toBeNull();
+});

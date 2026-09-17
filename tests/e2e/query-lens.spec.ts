@@ -308,3 +308,72 @@ test("editor gutter follows scroll and desktop row numbers stay on one line", as
       .evaluate((element) => getComputedStyle(element).whiteSpace),
   ).toBe("nowrap");
 });
+
+test("selects a chart metric and restores recent SQL without executing it", async ({
+  page,
+}) => {
+  await query(page);
+  await page.getByRole("button", { name: "Chart", exact: true }).click();
+  await page.getByLabel("Chart metric").selectOption("2");
+  await expect(
+    page.getByRole("img", { name: /Bar chart of units_sold/ }),
+  ).toBeVisible();
+  await expect(page.locator(".chart-row strong")).toHaveText([
+    "83",
+    "83",
+    "66",
+  ]);
+  await query(page, "SELECT COUNT(*) AS order_count FROM orders");
+  await page
+    .getByRole("button", { name: "Recent queries", exact: false })
+    .click();
+  const recent = page.getByRole("region", {
+    name: "Recent successful queries",
+  });
+  await expect(
+    recent.getByRole("button", { name: "Load query into editor" }),
+  ).toHaveCount(2);
+  await page.screenshot({
+    path: "docs/screenshots/history-desktop.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({
+    path: "docs/screenshots/history-mobile.png",
+    fullPage: true,
+  });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await recent
+    .getByRole("button", { name: "Load query into editor" })
+    .last()
+    .click();
+  await expect(page.getByLabel("SQL query")).toHaveValue(/revenue_cents/);
+  await expect(page.getByTestId("result-row-count")).toHaveText("1 row");
+  await expect(
+    page.getByText("Previous result · run the current query to update"),
+  ).toBeVisible();
+  await page.getByText("SQL behind this result", { exact: true }).click();
+  await expect(page.locator(".result-source pre")).toHaveText(
+    "SELECT COUNT(*) AS order_count FROM orders",
+  );
+  await page
+    .getByRole("button", { name: "Load result SQL", exact: true })
+    .click();
+  await expect(page.getByLabel("SQL query")).toHaveValue(
+    "SELECT COUNT(*) AS order_count FROM orders",
+  );
+  await expect(
+    page.getByText("Query completed", { exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Clear query history", exact: true })
+    .click();
+  await expect(
+    recent.getByText("Run a query to start your session history."),
+  ).toBeVisible();
+  await expect(page.getByTestId("result-row-count")).toHaveText("1 row");
+});

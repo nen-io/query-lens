@@ -64,3 +64,7 @@ Browser tests also start a production fixture host at `http://127.0.0.1:4408/que
 Only a conservative read-only SELECT/WITH subset is supported. Arbitrary database import, schema writes, transaction management and filesystem/extension functions are outside scope. Each query is ≤20 KiB, returns at most 500 retained rows/40 columns/1 MiB, and has a two-second deadline. Individual text cells are ≤16 KiB; BLOBs are ≤8 KiB and shown as hex. SQLite's native allocation guard is 32 MiB and does not cap the entire browser process.
 
 Query text/results stay in memory and disappear on reload. Worker replacement resets the same fixed seed; there is no durable database or user account. Export is explicit. Read the [SQL/security contract](docs/SECURITY.md), [dataset and schema](docs/DATASET.md), [tests and limitations](docs/TESTING.md) and [asset/license provenance](docs/ASSETS.md). Source is MIT licensed.
+
+## Exploration refinements
+
+Choose the chart label and metric instead of accepting only the inferred column. **Recent queries** retains the last ten distinct successful SQL texts for this session; Load changes the editor and waits for Run. **SQL behind this result** makes previous output attributable and recoverable. Clear history leaves your editor and current output intact; reloading clears session memory.

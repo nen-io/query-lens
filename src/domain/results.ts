@@ -24,23 +24,40 @@ export type Chart = {
   unit: string;
   points: { label: string; value: number }[];
 };
-export function chartData(result: QueryResult): Chart | null {
+export type ChartSelection = { labelIndex: number; valueIndex: number };
+export function chartColumns(result: QueryResult): {
+  labels: number[];
+  values: number[];
+} {
   if (result.truncated || result.rows.length < 2 || result.rows.length > 20)
-    return null;
-  const labelIndex = result.columns.findIndex((_, i) =>
-    result.rows.every((row) => typeof row[i] === "string"),
-  );
-  const numericIndices = result.columns
-    .map((_, i) => i)
-    .filter((i) =>
+    return { labels: [], values: [] };
+  const indices = result.columns.map((_, i) => i);
+  return {
+    labels: indices.filter((i) =>
+      result.rows.every((row) => typeof row[i] === "string"),
+    ),
+    values: indices.filter((i) =>
       result.rows.every(
         (row) => typeof row[i] === "number" && Number.isFinite(row[i]),
       ),
-    );
+    ),
+  };
+}
+export function chartData(
+  result: QueryResult,
+  selection?: ChartSelection,
+): Chart | null {
+  const available = chartColumns(result);
+  const labelIndex = selection?.labelIndex ?? available.labels[0];
   const valueIndex =
-    numericIndices.find((i) => result.columns[i].endsWith("_cents")) ??
-    numericIndices[0];
-  if (labelIndex < 0 || valueIndex === undefined) return null;
+    selection?.valueIndex ??
+    available.values.find((i) => result.columns[i].endsWith("_cents")) ??
+    available.values[0];
+  if (
+    !available.labels.includes(labelIndex) ||
+    !available.values.includes(valueIndex)
+  )
+    return null;
   const valueColumn = result.columns[valueIndex];
   return {
     labelColumn: result.columns[labelIndex],

@@ -61,3 +61,21 @@ For SQLite's single-quoted identifier compatibility, prepare a validation-only c
 **Consequences.** Formula-oriented text is deliberately transformed, making export useful for common spreadsheet inspection. It is not guaranteed safe after re-editing or rewriting by another tool, and is not a lossless typed backup.
 
 **Revisit when.** Users need exact typed interchange. Add a separately named JSON/Arrow/Parquet format with its own validation and compatibility contract.
+
+## ADR 6 — Bounded session history with explicit reload
+
+**Context.** Switching examples made earlier successful SQL hard to recover, and a previous-result badge did not expose the SQL that produced the visible rows.
+
+**Decision.** Keep ten distinct successful SQL texts with lightweight summaries in client memory, after request/epoch validation. Show a source-SQL disclosure on each result. Loading either source changes only the editor; it never runs. Clear affects only history. No storage, automatic rerun or copied result cache is introduced.
+
+**Alternatives.** Persisting SQL without explicit consent creates a new privacy/storage boundary. Keeping ten full results could retain10MiB of serialized rows. Auto-running a selected entry conflates navigation with execution. Recording rejected/cancelled input complicates the meaning of a successful-query history.
+
+**Consequences.** Recoverable exploration with bounded memory and unambiguous output provenance. Reload clears history; unsent drafts are not guaranteed recovery. Request fencing remains authoritative, so stale workers cannot resurrect cleared entries. A currently running valid query can add its eventual success after Clear.
+
+## ADR 7 — Position-based chart choices scoped to result identity
+
+**Context.** Inferring a metric by cents preference hid other useful numeric columns such as units. Duplicate SQL aliases make name-based selection ambiguous.
+
+**Decision.** Expose eligible label/metric columns by index, keep the existing default heuristic and validate every pair. Reset chart controls via an accepted-result version; preserve choices when only editor text changes.
+
+**Consequences.** Deliberate charts retain signed/zero values and finite geometry. NULL/mixed columns remain ineligible. A new result starts with the complete table, avoiding stale index choices after schema changes. CSV and table keep their original positional order.
