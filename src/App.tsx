@@ -33,6 +33,10 @@ const initial: ClientState = {
 export default function App() {
   const lineNumbers = useRef<HTMLDivElement>(null);
   const editor = useRef<HTMLTextAreaElement>(null);
+  const requestedFocus = useRef<{ from: Element | null; sql: string } | null>(
+    null,
+  );
+  const [attemptedSql, setAttemptedSql] = useState<string | null>(null);
   const [sql, setSql] = useState<string>(examples[0].sql);
   const [selectedExample, setSelectedExample] = useState("revenue");
   const [state, setState] = useState<ClientState>(initial);
@@ -52,6 +56,25 @@ export default function App() {
   }, [client]);
   const ready = state.status === "ready";
   const running = state.status === "running";
+  const queryError =
+    !!state.error && state.status !== "init-error" && attemptedSql === sql;
+  useEffect(() => {
+    const request = requestedFocus.current;
+    if (!request || state.status !== "ready") return;
+    if (
+      queryError &&
+      request.sql === sql &&
+      document.activeElement === request.from
+    )
+      editor.current?.focus();
+    requestedFocus.current = null;
+  }, [state, queryError, sql]);
+  function runQuery() {
+    if (!ready) return;
+    requestedFocus.current = { from: document.activeElement, sql };
+    setAttemptedSql(sql);
+    client.run(sql);
+  }
   const bytes = new TextEncoder().encode(sql).length;
   const stale = !!state.result && (state.previous || state.result.sql !== sql);
   function example(id: string) {
@@ -64,6 +87,7 @@ export default function App() {
   function explore(name: TableName) {
     setSelectedExample("custom");
     setSql(`SELECT *\nFROM ${name}\nLIMIT 20;`);
+    editor.current?.focus();
   }
   function loadSql(text: string) {
     setSelectedExample("custom");
@@ -76,6 +100,9 @@ export default function App() {
   );
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#sql-query">
+        Skip to SQL editor
+      </a>
       <header className="topbar">
         <a href="./" className="brand" aria-label="Query Lens home">
           <span className="brand-mark">
@@ -167,6 +194,10 @@ export default function App() {
                   id="sql-query"
                   ref={editor}
                   aria-label="SQL query"
+                  aria-invalid={queryError}
+                  aria-describedby={
+                    queryError ? "sql-help query-error" : "sql-help"
+                  }
                   spellCheck={false}
                   onScroll={(event) => {
                     if (lineNumbers.current)
@@ -184,7 +215,7 @@ export default function App() {
                       event.key === "Enter"
                     ) {
                       event.preventDefault();
-                      if (ready) client.run(sql);
+                      if (ready) runQuery();
                     }
                   }}
                 />
@@ -208,7 +239,10 @@ export default function App() {
                   {running ? (
                     <button
                       className="run-button cancel"
-                      onClick={() => client.cancel()}
+                      onClick={() => {
+                        client.cancel();
+                        editor.current?.focus();
+                      }}
                     >
                       <Square size={13} /> Cancel query
                     </button>
@@ -216,13 +250,17 @@ export default function App() {
                     <button
                       className="run-button"
                       disabled={!ready}
-                      onClick={() => client.run(sql)}
+                      onClick={runQuery}
                     >
                       <Play size={13} fill="currentColor" /> Run query
                     </button>
                   )}
                 </div>
               </div>
+              <p id="sql-help" className="editor-help">
+                Edit SQL, then choose Run query or press Control/Command +
+                Enter. Tab moves to the next control.
+              </p>
               <div className="safety-strip">
                 <ShieldCheck size={12} />
                 <span>SELECT / WITH only</span>
@@ -236,7 +274,7 @@ export default function App() {
               onClear={() => client.clearHistory()}
             />
             {state.error && (
-              <div className="error-banner" role="alert">
+              <div className="error-banner" id="query-error" role="alert">
                 <div>
                   <strong>
                     {state.status === "init-error"
@@ -252,7 +290,14 @@ export default function App() {
                   )}
                 </div>
                 {state.status === "init-error" && (
-                  <button onClick={() => client.retry()}>Retry engine</button>
+                  <button
+                    onClick={() => {
+                      client.retry();
+                      editor.current?.focus();
+                    }}
+                  >
+                    Retry engine
+                  </button>
                 )}
               </div>
             )}

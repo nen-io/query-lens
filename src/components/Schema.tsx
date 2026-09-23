@@ -30,7 +30,7 @@ export function Schema({
               key={table.name}
               open={table.name === "orders" || table.name === "order_items"}
             >
-              <summary>
+              <summary aria-label={`${table.name}, ${table.count} rows`}>
                 <ChevronRight size={12} />
                 <Table2 size={13} />
                 <span>{table.name}</span>
@@ -58,6 +58,7 @@ export function Schema({
               </ul>
               <button
                 className="explore-table"
+                aria-label={`Preview ${table.name} table`}
                 onClick={() => onExplore(table.name)}
               >
                 Preview table <ChevronRight size={11} />

@@ -74,3 +74,7 @@ The sorting acceptance case failed on the absent real column control before impl
 New real browser captures: `screenshots/sorting-desktop.png` at 1440px and `screenshots/sorting-mobile.png` at 390px. Existing desktop/mobile screenshots were refreshed by their unchanged journeys. These screenshots were visually inspected; a palette mismatch in the initial Query Lens sort controls was caught and corrected before final capture. Existing browser/platform/scale limitations above still apply. Public deployment and exact-commit verification are separate publishing checks.
 
 Current official references consulted: [React state structure](https://react.dev/learn/choosing-the-state-structure), [Playwright assertions](https://playwright.dev/docs/test-assertions) and [SQLite query_only](https://www.sqlite.org/pragma.html#pragma_query_only). No dependencies were added or upgraded for this refinement.
+
+## Accessibility refinement — 23 September 2026
+
+A real keyboard/DOM pass found issues beyond the prior green initial axe sample. The new [accessibility evidence](ACCESSIBILITY.md) records the reproducible focus/error/data-access gaps, exact keyboard behavior, four committed browser regression journeys, text/target improvements and untested assistive-technology boundaries. These journeys run with the complete existing browser suite, while typechecks, production build and existing domain/security tests continue to pass. Screenshots were refreshed from the running application.

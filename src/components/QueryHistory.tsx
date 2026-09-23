@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { QueryHistoryEntry } from "../worker/client";
 
 export function QueryHistory({
@@ -11,10 +11,12 @@ export function QueryHistory({
   onClear: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const toggle = useRef<HTMLButtonElement>(null);
   return (
     <section className="query-history panel">
       <div className="history-heading">
         <button
+          ref={toggle}
           aria-expanded={open}
           aria-controls="query-history-list"
           onClick={() => setOpen(!open)}
@@ -31,7 +33,13 @@ export function QueryHistory({
         >
           <div className="history-help">
             <p>Loading changes the editor only. Press Run when ready.</p>
-            <button disabled={!entries.length} onClick={onClear}>
+            <button
+              disabled={!entries.length}
+              onClick={() => {
+                onClear();
+                toggle.current?.focus();
+              }}
+            >
               Clear query history
             </button>
           </div>

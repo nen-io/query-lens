@@ -83,3 +83,7 @@ For SQLite's single-quoted identifier compatibility, prepare a validation-only c
 ## September 23 refinement
 
 Sorting is a derived view over the accepted bounded result, indexed by column position. It shares order across table, chart and CSV so export is predictable. NULL is always last, numeric cells compare numerically and strings use deterministic case-sensitive UTF-16 order. Exact integer text is intentionally not coerced, and this does not claim SQLite collation parity. Stable ties preserve the original captured order; Original order restores it without executing SQL. Existing result-version remounts reset sorting only after a new accepted success.
+
+## Focus follows intent, not every render
+
+The accessibility pass uses native links, buttons, inputs, details and semantic tables. Refs move focus only after an explicit navigation/recovery action or a guarded error completion. Status changes remain announcements rather than unconditional focus movement. Supporting text has a 12px floor and flow labels use normal layout where text can grow. These choices preserve predictable keyboard order without adding a UI library, global shortcut registry or focus trap. [ACCESSIBILITY.md](ACCESSIBILITY.md) records behavior, evidence and limits.

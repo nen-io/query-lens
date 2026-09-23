@@ -70,3 +70,7 @@ Query text/results stay in memory and disappear on reload. Worker replacement re
 ## Exploration refinements
 
 Choose the chart label and metric instead of accepting only the inferred column. **Recent queries** retains the last ten distinct successful SQL texts for this session; Load changes the editor and waits for Run. **SQL behind this result** makes previous output attributable and recoverable. Clear history leaves your editor and current output intact; reloading clears session memory.
+
+## Accessibility and keyboard use
+
+See the [accessibility walkthrough](docs/ACCESSIBILITY.md) for keyboard paths, error recovery, readable data alternatives, tested reflow/forced-color scenarios and remaining assistive-technology limitations.

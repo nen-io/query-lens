@@ -1,5 +1,5 @@
 import { ArrowDownToLine, BarChart3, Table2 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { QueryResult } from "../domain/query-engine";
 import {
   sortedRows,
@@ -18,6 +18,8 @@ export function Results({
   stale: boolean;
   onLoadSql: (sql: string) => void;
 }) {
+  const columnButtons = useRef(new Map<number, HTMLButtonElement>());
+  const tableButton = useRef<HTMLButtonElement>(null);
   const [view, setView] = useState<"table" | "chart">("table");
   const [selection, setSelection] = useState<ChartSelection | undefined>();
   const [sort, setSort] = useState<ResultSort | undefined>();
@@ -94,6 +96,7 @@ export function Results({
           <div className="result-controls">
             <div className="result-views">
               <button
+                ref={tableButton}
                 aria-pressed={view === "table" || !chart}
                 onClick={() => setView("table")}
               >
@@ -125,7 +128,17 @@ export function Results({
                 : "Original result order · select a column heading to sort"}
             </span>
             {sort && (
-              <button onClick={() => setSort(undefined)}>Original order</button>
+              <button
+                onClick={() => {
+                  const target =
+                    columnButtons.current.get(sort.column) ??
+                    tableButton.current;
+                  setSort(undefined);
+                  target?.focus();
+                }}
+              >
+                Original order
+              </button>
             )}
             <small>
               Sorts retained rows only. Charts and CSV follow this order; NULL
@@ -183,7 +196,7 @@ export function Results({
               <div
                 className="result-chart"
                 role="img"
-                aria-label={`Bar chart of ${chart.valueColumn} by ${chart.labelColumn}. The table contains all exact values.`}
+                aria-label={`Bar chart of ${chart.valueColumn} by ${chart.labelColumn}. Open Exact chart values below for a text table, or choose Table for the complete result.`}
               >
                 <div className="chart-caption">
                   <strong>{chart.valueColumn.replaceAll("_", " ")}</strong>
@@ -214,6 +227,36 @@ export function Results({
                   sign and amber fill; zero stays zero.
                 </p>
               </div>
+              <details className="chart-values">
+                <summary>Exact chart values</summary>
+                <div
+                  className="chart-values-scroll"
+                  role="region"
+                  aria-label="Chart values, scrollable"
+                  tabIndex={0}
+                >
+                  <table>
+                    <caption>
+                      Chart values: {chart.valueColumn} by {chart.labelColumn} (
+                      {chart.unit})
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">{chart.labelColumn}</th>
+                        <th scope="col">{chart.valueColumn}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {chart.points.map((point, index) => (
+                        <tr key={index}>
+                          <td>{point.label}</td>
+                          <td>{String(point.value)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </details>
             </>
           ) : (
             <div
@@ -223,6 +266,11 @@ export function Results({
               tabIndex={0}
             >
               <table>
+                <caption className="sr-only">
+                  Query result: {result.rows.length} rows and{" "}
+                  {result.columns.length} columns. Select a column heading to
+                  sort retained rows.
+                </caption>
                 <thead>
                   <tr>
                     <th scope="col" className="row-number">
@@ -238,6 +286,11 @@ export function Results({
                       >
                         <button
                           className="column-sort"
+                          ref={(element) => {
+                            if (element)
+                              columnButtons.current.set(index, element);
+                            else columnButtons.current.delete(index);
+                          }}
                           aria-label={`Sort ${column}, column ${index + 1}`}
                           onClick={() => sortColumn(index)}
                         >

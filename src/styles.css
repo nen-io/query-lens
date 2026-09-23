@@ -130,7 +130,7 @@ svg {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: 12px;
   color: #b0bfd3;
 }
 .engine-state i,
@@ -155,7 +155,7 @@ svg {
   border: 1px solid #3c4c64;
   border-radius: 4px;
   padding: 6px 9px;
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 1.1px;
   color: #bed1ea;
 }
@@ -172,7 +172,7 @@ main {
   margin-bottom: 30px;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1.5px;
   color: #a6b8d0;
   display: flex;
@@ -195,12 +195,12 @@ main {
   align-items: center;
   gap: 8px;
   color: #bdd5f0;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 1.1px;
 }
 .dataset-badge small {
   display: block;
-  font-size: 8px;
+  font-size: 12px;
   letter-spacing: 0.8px;
   color: #a2b5cf;
   margin-top: 6px;
@@ -225,7 +225,7 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 1.4px;
   color: #a4b6cf;
 }
@@ -254,13 +254,13 @@ main {
 }
 .database-name > div > span {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: #a2b6d2;
   margin-top: 3px;
   font-family: ui-monospace, monospace;
 }
 .schema-intro {
-  font-size: 10px;
+  font-size: 12px;
   color: #9fb0c5;
   margin: 14px 0 23px;
 }
@@ -296,7 +296,7 @@ main {
   border: 1px solid #3a4d68;
   border-radius: 4px;
   padding: 0 5px;
-  font-size: 9px;
+  font-size: 12px;
   font-family: ui-monospace, monospace;
 }
 .table-list ul {
@@ -310,7 +310,7 @@ main {
   align-items: center;
   gap: 7px;
   padding: 6px 0;
-  font-size: 10px;
+  font-size: 12px;
   color: #b3c5de;
 }
 .table-list li > span {
@@ -331,18 +331,18 @@ main {
   margin: 0 3px;
 }
 .table-list li > small {
-  font-size: 8px;
+  font-size: 12px;
   color: #95adcf;
   font-family: ui-monospace, monospace;
 }
 .nullable {
   color: #d9c596;
-  font-size: 10px;
+  font-size: 12px;
 }
 .explore-table {
   border: 0;
   background: none;
-  font-size: 9px;
+  font-size: 12px;
   padding: 8px 0 0;
   color: #a9c9ef;
   justify-content: flex-start;
@@ -362,18 +362,18 @@ main {
   margin-bottom: 13px;
 }
 .dataset-note h3 {
-  font-size: 11px;
+  font-size: 12px;
   color: #c7d7ed;
   font-weight: 550;
 }
 .dataset-note p {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.9;
   color: #a2b8d4;
   margin-top: 8px;
 }
 .schema-loading {
-  font-size: 11px;
+  font-size: 12px;
   padding: 20px 0;
   color: #a9bfdd;
 }
@@ -388,7 +388,7 @@ main {
   margin-top: 6px;
 }
 .language-tag {
-  font-size: 9px;
+  font-size: 12px;
   color: #acc5e5;
   letter-spacing: 1px;
   border: 1px solid #425976;
@@ -410,10 +410,10 @@ main {
   align-items: center;
   gap: 12px;
   color: #b0c8e9;
-  font-size: 10px;
+  font-size: 12px;
 }
 .example-bar select {
-  font-size: 11px;
+  font-size: 12px;
   padding: 7px 9px;
   background: #243d5c;
   border-color: #466789;
@@ -423,7 +423,7 @@ main {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
+  font-size: 12px;
   color: #acc3df;
 }
 .code-editor {
@@ -487,7 +487,7 @@ main {
   display: flex;
   gap: 20px;
   align-items: center;
-  font-size: 9px;
+  font-size: 12px;
   color: #abc0db;
 }
 .query-toolbar .too-large {
@@ -496,7 +496,7 @@ main {
 .keyboard-hint {
   color: #99adc8;
   font-family: ui-monospace, monospace;
-  font-size: 9px;
+  font-size: 12px;
 }
 .query-actions {
   display: flex;
@@ -513,7 +513,7 @@ main {
   background: #b2d2fb;
   color: #183252;
   border-color: #b2d2fb;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   padding: 9px 16px;
 }
@@ -531,7 +531,7 @@ main {
   display: flex;
   align-items: center;
   gap: 15px;
-  font-size: 8px;
+  font-size: 12px;
   color: #a9bdd7;
   border-top: 1px solid #314158;
   background: #142134;
@@ -558,7 +558,7 @@ main {
   margin-top: 6px;
 }
 .results-heading > button {
-  font-size: 10px;
+  font-size: 12px;
   background: #1b2a41;
   border-color: #415574;
 }
@@ -570,7 +570,7 @@ main {
   background: #1c302e;
   border-block: 1px solid #3b534b;
   padding: 12px 21px;
-  font-size: 9px;
+  font-size: 12px;
   color: #bddbcc;
   flex-wrap: wrap;
 }
@@ -590,7 +590,7 @@ main {
   display: flex;
   gap: 16px;
   font-family: ui-monospace, monospace;
-  font-size: 9px;
+  font-size: 12px;
   flex-wrap: wrap;
 }
 .result-summary.stale {
@@ -622,7 +622,7 @@ main {
   padding: 3px;
 }
 .result-views button {
-  font-size: 9px;
+  font-size: 12px;
   background: none;
   border: 0;
   padding: 5px 8px;
@@ -633,7 +633,7 @@ main {
   border-radius: 4px;
 }
 .result-controls > span {
-  font-size: 9px;
+  font-size: 12px;
   color: #a6bddb;
 }
 .result-table-scroll {
@@ -645,11 +645,11 @@ table {
   border-collapse: collapse;
   width: 100%;
   text-align: left;
-  font-size: 11px;
+  font-size: 12px;
 }
 th {
   background: #1a2b43;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   color: #b9d2f1;
   position: sticky;
@@ -660,7 +660,7 @@ th {
 td {
   font-family: ui-monospace, SFMono-Regular, monospace;
   color: #d0def0;
-  font-size: 10px;
+  font-size: 12px;
   border-bottom: 1px solid #2b3f59;
   max-width: 320px;
   overflow-wrap: anywhere;
@@ -677,7 +677,7 @@ th {
 .row-number {
   width: 48px;
   color: #8fa8ca;
-  font-size: 9px;
+  font-size: 12px;
   font-family: ui-monospace, monospace;
 }
 .numeric {
@@ -690,7 +690,7 @@ tbody tr:hover {
   background: #233958;
 }
 .null-cell {
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.7px;
   color: #a6b6cf;
   background: #27354e;
@@ -698,7 +698,7 @@ tbody tr:hover {
   padding: 3px 5px;
 }
 .empty-string {
-  font-size: 9px;
+  font-size: 12px;
   color: #a9b9d1;
   font-style: italic;
 }
@@ -714,12 +714,12 @@ tbody tr:hover {
   gap: 12px;
   flex-wrap: wrap;
   padding: 14px 20px;
-  font-size: 9px;
+  font-size: 12px;
   color: #a3bbd9;
   background: #111e30;
 }
 .integer-note {
-  font-size: 10px;
+  font-size: 12px;
   color: #e1c595;
   padding: 12px 20px;
   background: #352c1f;
@@ -760,7 +760,7 @@ tbody tr:hover {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 23px;
-  font-size: 10px;
+  font-size: 12px;
   gap: 15px;
 }
 .chart-caption strong {
@@ -778,7 +778,7 @@ tbody tr:hover {
   gap: 15px;
   align-items: center;
   margin: 20px 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 .chart-row > span {
   color: #c0d2e8;
@@ -787,7 +787,7 @@ tbody tr:hover {
 .chart-row > strong {
   text-align: right;
   font-family: ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   color: #d4e7fe;
   overflow-wrap: anywhere;
@@ -808,7 +808,7 @@ tbody tr:hover {
   background: linear-gradient(90deg, #9b6f49, #e4b780);
 }
 .result-chart > p {
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.8;
   color: #a1b8d6;
   margin-top: 24px;
@@ -818,7 +818,7 @@ tbody tr:hover {
   justify-content: space-between;
   gap: 20px;
   flex-wrap: wrap;
-  font-size: 9px;
+  font-size: 12px;
   color: #a7bedb;
   margin: 17px 4px 0;
 }
@@ -828,7 +828,7 @@ tbody tr:hover {
   gap: 7px;
 }
 .notice {
-  font-size: 11px;
+  font-size: 12px;
   color: #b8d5be;
   display: flex;
   align-items: center;
@@ -852,18 +852,18 @@ tbody tr:hover {
   font-size: 12px;
 }
 .error-banner p {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
   overflow-wrap: anywhere;
   margin-top: 5px;
 }
 .error-banner small {
-  font-size: 10px;
+  font-size: 12px;
   display: block;
   margin-top: 8px;
 }
 .error-banner button {
-  font-size: 10px;
+  font-size: 12px;
   flex-shrink: 0;
 }
 footer {
@@ -872,7 +872,7 @@ footer {
   gap: 20px;
   margin-top: 28px;
   color: #93abc9;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.3px;
 }
 @media (max-width: 1000px) {
@@ -907,7 +907,7 @@ footer {
     gap: 10px;
   }
   .result-controls > span {
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 @media (max-width: 760px) {
@@ -927,7 +927,7 @@ footer {
     display: none;
   }
   .local-pill {
-    font-size: 7px;
+    font-size: 12px;
     letter-spacing: 0.5px;
     padding: 5px 6px;
   }
@@ -980,7 +980,7 @@ footer {
   }
   .example-bar label {
     display: block;
-    font-size: 10px;
+    font-size: 12px;
   }
   .example-bar select {
     display: block;
@@ -989,15 +989,15 @@ footer {
     margin-top: 8px;
   }
   .example-bar > span {
-    font-size: 9px;
+    font-size: 12px;
   }
   .line-numbers {
-    font-size: 10px;
+    font-size: 12px;
     min-width: 37px;
     padding: 21px 8px 21px 12px;
   }
   .code-editor textarea {
-    font-size: 10px;
+    font-size: 12px;
     padding-top: 21px;
     padding-right: 15px;
     min-height: 285px;
@@ -1012,23 +1012,23 @@ footer {
     gap: 13px;
   }
   .query-toolbar > div:first-child {
-    font-size: 9px;
+    font-size: 12px;
     gap: 4px;
   }
   .keyboard-hint {
-    font-size: 8px;
+    font-size: 12px;
   }
   .query-actions {
     margin-left: auto;
   }
   .run-button {
-    font-size: 11px;
+    font-size: 12px;
     padding: 8px 11px;
   }
   .safety-strip {
     padding: 11px 12px;
     gap: 7px;
-    font-size: 8px;
+    font-size: 12px;
     flex-wrap: wrap;
   }
   .safety-strip span + span:before {
@@ -1043,25 +1043,25 @@ footer {
     font-size: 18px;
   }
   .results-heading button {
-    font-size: 9px;
+    font-size: 12px;
   }
   .result-summary {
     padding: 13px 15px;
-    font-size: 10px;
+    font-size: 12px;
     gap: 9px;
   }
   .result-summary > div {
-    font-size: 9px;
+    font-size: 12px;
     gap: 11px;
   }
   .result-controls {
     padding: 12px 14px;
   }
   .result-views button {
-    font-size: 10px;
+    font-size: 12px;
   }
   .result-controls > span {
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.7;
   }
   .result-table-scroll {
@@ -1075,7 +1075,7 @@ footer {
     min-width: 440px;
   }
   .result-footnote {
-    font-size: 9px;
+    font-size: 12px;
     padding: 14px;
     line-height: 1.8;
   }
@@ -1083,7 +1083,7 @@ footer {
     padding: 35px 15px;
   }
   .workspace-footer {
-    font-size: 9px;
+    font-size: 12px;
     gap: 8px;
     line-height: 1.8;
   }
@@ -1091,16 +1091,16 @@ footer {
     padding: 14px 0;
   }
   .schema-panel .table-list li {
-    font-size: 11px;
+    font-size: 12px;
   }
   .schema-panel .table-list li > small {
-    font-size: 9px;
+    font-size: 12px;
   }
   .schema-panel .dataset-note {
     margin-top: 22px;
   }
   .dataset-note p {
-    font-size: 11px;
+    font-size: 12px;
   }
   .result-chart {
     padding: 20px 15px;
@@ -1111,16 +1111,16 @@ footer {
   }
   .chart-caption span {
     display: block;
-    font-size: 10px;
+    font-size: 12px;
   }
   .chart-row {
     grid-template-columns: 95px 1fr 74px;
     gap: 9px;
-    font-size: 10px;
+    font-size: 12px;
     margin: 22px 0;
   }
   .chart-row > strong {
-    font-size: 10px;
+    font-size: 12px;
   }
   .chart-bar-track {
     height: 18px;
@@ -1134,7 +1134,7 @@ footer {
   footer {
     flex-direction: column;
     gap: 7px;
-    font-size: 8px;
+    font-size: 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1176,7 +1176,7 @@ footer {
 td,
 th,
 footer {
-  font-size: 11px;
+  font-size: 12px;
 }
 .code-editor {
   display: block;
@@ -1211,7 +1211,7 @@ footer {
     gap: 10px;
   }
   .local-pill {
-    font-size: 10px;
+    font-size: 12px;
   }
   .line-numbers {
     width: 40px;
@@ -1223,7 +1223,7 @@ footer {
   }
   .line-numbers,
   .code-editor textarea {
-    font-size: 11px;
+    font-size: 12px;
     line-height: 1.85;
   }
   .example-bar label,
@@ -1236,7 +1236,7 @@ footer {
   .safety-strip,
   .result-summary,
   .result-summary > div {
-    font-size: 11px;
+    font-size: 12px;
   }
   .safety-strip {
     gap: 8px;
@@ -1260,7 +1260,7 @@ footer {
   .chart-row,
   .chart-row > strong,
   .chart-caption span {
-    font-size: 11px;
+    font-size: 12px;
   }
 }
 .row-number {
@@ -1334,7 +1334,7 @@ footer {
   display: block;
   margin-top: 6px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 .query-history li button {
   flex-shrink: 0;
@@ -1418,7 +1418,7 @@ footer {
 }
 .sort-summary small {
   flex-basis: 100%;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.6;
 }
 .sort-summary button {
@@ -1450,4 +1450,163 @@ th[aria-sort] {
   text-underline-offset: 4px;
   line-height: 1.6;
   font-size: 12px;
+}
+
+/* Keep small controls practical without relying on color or animation. */
+button {
+  min-height: 32px;
+  min-width: 24px;
+}
+input,
+select {
+  min-height: 36px;
+}
+button,
+input,
+textarea,
+select,
+summary {
+  scroll-margin-block: 20px;
+}
+.project-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+@media (pointer: coarse) {
+  button,
+  summary,
+  input,
+  select {
+    min-height: 44px;
+  }
+}
+@media (forced-colors: active) {
+  button,
+  input,
+  select,
+  textarea,
+  summary {
+    border: 1px solid ButtonText;
+  }
+  :focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 3px;
+  }
+  button[aria-pressed="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: -3px;
+  }
+  button:disabled {
+    opacity: 1;
+    color: GrayText;
+    border-color: GrayText;
+  }
+}
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -100px;
+  z-index: 30;
+  padding: 12px 16px;
+  background: #b2d2fb;
+  color: #183252;
+  border-radius: 6px;
+}
+.skip-link:focus {
+  top: 16px;
+}
+.editor-help {
+  padding: 12px 20px;
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+}
+.code-editor textarea[aria-invalid="true"] {
+  outline: 2px solid #ffbd9c;
+  outline-offset: -2px;
+}
+.table-list summary,
+.result-source summary,
+.chart-values summary {
+  min-height: 32px;
+  align-content: center;
+}
+.chart-values {
+  padding: 0 24px 20px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.chart-values summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.chart-values-scroll {
+  max-height: 300px;
+  overflow: auto;
+  margin-top: 12px;
+}
+.chart-values table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.chart-values caption {
+  text-align: left;
+  padding: 10px 0;
+  color: #e9edf6;
+}
+.chart-values th,
+.chart-values td {
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  padding: 10px;
+}
+@media (max-width: 760px) {
+  .chart-values {
+    padding: 0 14px 16px;
+  }
+}
+@media (forced-colors: active) {
+  .code-editor textarea[aria-invalid="true"] {
+    outline: 3px dashed Highlight;
+  }
+  .chart-bar {
+    forced-color-adjust: none;
+    background: Highlight;
+  }
+  .result-chart,
+  .results-panel,
+  .editor-panel {
+    border: 1px solid CanvasText;
+  }
+}
+
+@media (pointer: coarse) {
+  .table-list summary,
+  .result-source summary,
+  .chart-values summary {
+    min-height: 44px;
+  }
+}
+
+/* Clip the unfocused bypass link so full-page captures and zoom cannot expose it mid-page. */
+.skip-link:not(:focus) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

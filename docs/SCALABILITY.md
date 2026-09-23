@@ -46,3 +46,7 @@ History adds at most200KiB of SQL text measured as UTF-8 input bytes, plus summa
 ## Refinement resource cost
 
 Sorting copies an array of at most 500 row references and takes O(n log n) comparisons; row contents are not duplicated or persisted. The existing 1 MiB result bound limits total strings. Sorting only retained rows is explicitly disclosed for truncated results. Larger datasets need database ORDER BY and bounded pagination, not lifting browser caps or claiming global ordering.
+
+## Accessibility costs
+
+Focus refs and descriptions are bounded by the existing visible model. Readable fonts and normal-flow labels trade some vertical density for predictable reflow without changing protocol/query resource limits. Query chart text alternatives contain at most the existing 20 chart points; they do not duplicate whole query result history or rerun work. This pass does not establish throughput, latency or assistive-technology performance benchmarks.

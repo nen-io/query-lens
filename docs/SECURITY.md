@@ -57,3 +57,7 @@ Recent-query history is memory-only, capped at ten distinct already-validated su
 ## Refinement boundary
 
 Sorting reads existing typed cells and renders through React text nodes; it never builds or executes SQL. CSV still passes every cell and header through formula-safe escaping. The original worker read-only gates, response bounds and termination watchdog are unchanged. Fixed public GitHub links carry no SQL or result parameters and use noreferrer.
+
+## Accessibility boundary
+
+Focus refs and semantic descriptions confer no additional data or execution authority. Keyboard actions use the same bounded validation and execution paths as pointer actions. Error and data alternatives render plain React text, never HTML. No analytics, external fonts, new dependencies or outbound requests were added by the accessibility refinement.
