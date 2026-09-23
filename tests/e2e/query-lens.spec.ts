@@ -377,3 +377,133 @@ test("selects a chart metric and restores recent SQL without executing it", asyn
   ).toBeVisible();
   await expect(page.getByTestId("result-row-count")).toHaveText("1 row");
 });
+
+test("sorts numeric results with stable NULL-last order and exports the displayed rows", async ({
+  page,
+}) => {
+  await query(
+    page,
+    "SELECT 'ten' AS label, 10 AS value UNION ALL SELECT 'two', 2 UNION ALL SELECT 'missing', NULL UNION ALL SELECT 'other two', 2",
+  );
+  const sort = page.getByRole("button", {
+    name: "Sort value, column 2",
+    exact: true,
+  });
+  await sort.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator('th[aria-sort="ascending"]')).toHaveCount(1);
+  await expect(page.locator("tbody tr td:nth-child(2)")).toHaveText([
+    "two",
+    "other two",
+    "ten",
+    "missing",
+  ]);
+  await sort.click();
+  await expect(page.locator("tbody tr td:nth-child(2)")).toHaveText([
+    "ten",
+    "two",
+    "other two",
+    "missing",
+  ]);
+  const downloadEvent = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV" }).click();
+  const csv = await fs.readFile((await (await downloadEvent).path())!, "utf8");
+  expect(csv).toBe(
+    '"label","value"\r\n"ten","10"\r\n"two","2"\r\n"other two","2"\r\n"missing",""\r\n',
+  );
+  await query(page, "SELECT FROM invalid");
+  await expect(page.locator('th[aria-sort="descending"]')).toHaveCount(1);
+  await page
+    .getByRole("button", { name: "Original order", exact: true })
+    .click();
+  await expect(page.locator("tbody tr td:nth-child(2)")).toHaveText([
+    "ten",
+    "two",
+    "missing",
+    "other two",
+  ]);
+  await sort.click();
+  await query(page, "SELECT 20 AS value UNION ALL SELECT 3");
+  await expect(page.locator('th[aria-sort="ascending"]')).toHaveCount(0);
+  await expect(page.locator("tbody tr td:nth-child(2)")).toHaveText([
+    "20",
+    "3",
+  ]);
+});
+
+test("shares sorted order with charts, distinguishes duplicate headings and links evidence", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1100 });
+  await query(page);
+  await page
+    .getByRole("button", { name: "Sort revenue_cents, column 2", exact: true })
+    .click();
+  await page.evaluate(() => {
+    (document.activeElement as HTMLElement)?.blur();
+    window.scrollTo(0, 0);
+  });
+  await page.screenshot({
+    path: "docs/screenshots/sorting-desktop.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({
+    path: "docs/screenshots/sorting-mobile.png",
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Chart", exact: true }).click();
+  await expect(page.locator(".chart-row strong")).toHaveText([
+    "112,200",
+    "249,200",
+    "365,100",
+  ]);
+  await page
+    .getByRole("button", { name: "Original order", exact: true })
+    .click();
+  await expect(page.locator(".chart-row strong")).toHaveText([
+    "365,100",
+    "249,200",
+    "112,200",
+  ]);
+  await query(
+    page,
+    "SELECT 'ten' AS value, 10 AS value UNION ALL SELECT 'two', 2",
+  );
+  await page
+    .getByRole("button", { name: "Sort value, column 2", exact: true })
+    .click();
+  await expect(page.locator("tbody tr td:nth-child(2)")).toHaveText([
+    "two",
+    "ten",
+  ]);
+  await page
+    .getByRole("button", { name: "Sort value, column 1", exact: true })
+    .click();
+  await expect(page.locator("tbody tr td:nth-child(2)")).toHaveText([
+    "ten",
+    "two",
+  ]);
+  await page.setViewportSize({ width: 320, height: 740 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  const source = page.getByRole("link", { name: "Source", exact: true });
+  await expect(source).toHaveAttribute(
+    "href",
+    "https://github.com/nen-io/query-lens",
+  );
+  await source.focus();
+  await page.keyboard.press("Tab");
+  const guide = page.getByRole("link", {
+    name: "Engineering walkthrough",
+    exact: true,
+  });
+  await expect(guide).toBeFocused();
+  await expect(guide).toHaveAttribute(
+    "href",
+    "https://github.com/nen-io/query-lens/blob/main/docs/REVIEWER_GUIDE.md",
+  );
+});

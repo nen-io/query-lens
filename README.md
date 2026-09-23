@@ -4,11 +4,13 @@
 
 Query Lens is a browser SQL workbench backed by real SQLite WebAssembly in a dedicated worker. Explore a synthetic store, run your own queries, inspect actual rows and charts, and export spreadsheet-safe CSV. No login, API key, backend or runtime CDN.
 
+This is a recent AI-assisted portfolio demonstration with executable tests and documented limits; it is not a claim of production usage.
+
 ![Query Lens running real category revenue SQL](docs/screenshots/desktop.png)
 
 [Mobile screenshot](docs/screenshots/mobile.png) · [Architecture](docs/ARCHITECTURE.md) · [Security](docs/SECURITY.md) · [Scaling design](docs/SCALABILITY.md) · [Decision records](docs/DECISIONS.md)
 
-**[Open the live demo](https://nen-io.github.io/query-lens/)** · [CI checks](https://github.com/nen-io/query-lens/actions)
+**[Open the live demo](https://nen-io.github.io/query-lens/)** · [Three-minute engineering walkthrough](docs/REVIEWER_GUIDE.md) · [CI checks](https://github.com/nen-io/query-lens/actions)
 
 ## Start locally
 
@@ -42,7 +44,7 @@ Browser tests also start a production fixture host at `http://127.0.0.1:4408/que
 
 1. Expand a schema table. Column types and row counts come from the actual seeded database. **Preview table** edits SQL and waits for your explicit Run.
 2. Run the default **Revenue by category** query. Workspace returns **365,100 cents**, Everyday carry **249,200**, and Stationery **112,200**. Those are real SQL results from disclosed synthetic records, not application throughput claims.
-3. Switch to **Chart** to see the same values. Cents remain raw cents; the app does not silently convert or infer a currency from arbitrary custom SQL.
+3. Click a table column heading to cycle ascending, descending and original order. Numbers sort numerically; text sorts lexically, including exact integers carried as text. NULL stays last. CSV and chart rows follow the selected sort of retained rows. Switch to **Chart** to see the same values. Cents remain raw cents; the app does not silently convert or infer a currency from arbitrary custom SQL.
 4. Choose **City totals**, **Top products**, **Order detail**, **Monthly revenue** or **Missing contact details**. Choosing an example changes the editor only. Press **Run query** or **Ctrl/Cmd+Enter** to execute it.
 5. Try `SELECT '臺北; coffee' AS label, 42 AS answer;`. Quoted semicolons are valid. Two statements, writes, PRAGMAs and attach commands are rejected.
 6. Run a syntax error. The previous successful output stays visible with a clear **Previous result** label. Correct the query and run again.

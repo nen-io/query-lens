@@ -79,3 +79,7 @@ For SQLite's single-quoted identifier compatibility, prepare a validation-only c
 **Decision.** Expose eligible label/metric columns by index, keep the existing default heuristic and validate every pair. Reset chart controls via an accepted-result version; preserve choices when only editor text changes.
 
 **Consequences.** Deliberate charts retain signed/zero values and finite geometry. NULL/mixed columns remain ineligible. A new result starts with the complete table, avoiding stale index choices after schema changes. CSV and table keep their original positional order.
+
+## September 23 refinement
+
+Sorting is a derived view over the accepted bounded result, indexed by column position. It shares order across table, chart and CSV so export is predictable. NULL is always last, numeric cells compare numerically and strings use deterministic case-sensitive UTF-16 order. Exact integer text is intentionally not coerced, and this does not claim SQLite collation parity. Stable ties preserve the original captured order; Original order restores it without executing SQL. Existing result-version remounts reset sorting only after a new accepted success.

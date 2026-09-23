@@ -2,6 +2,8 @@ import { ArrowDownToLine, BarChart3, Table2 } from "lucide-react";
 import { useState } from "react";
 import type { QueryResult } from "../domain/query-engine";
 import {
+  sortedRows,
+  type ResultSort,
   chartColumns,
   chartData,
   toCsv,
@@ -18,7 +20,19 @@ export function Results({
 }) {
   const [view, setView] = useState<"table" | "chart">("table");
   const [selection, setSelection] = useState<ChartSelection | undefined>();
-  const chart = result ? chartData(result, selection) : null;
+  const [sort, setSort] = useState<ResultSort | undefined>();
+  const rows = result ? sortedRows(result, sort) : [];
+  const displayed = result ? { ...result, rows } : undefined;
+  const chart = displayed ? chartData(displayed, selection) : null;
+  function sortColumn(column: number) {
+    setSort((current) =>
+      current?.column !== column
+        ? { column, direction: "ascending" }
+        : current.direction === "ascending"
+          ? { column, direction: "descending" }
+          : undefined,
+    );
+  }
   const columns = result ? chartColumns(result) : { labels: [], values: [] };
   const labelIndex = selection?.labelIndex ?? columns.labels[0];
   const valueIndex =
@@ -28,7 +42,9 @@ export function Results({
   function download() {
     if (!result) return;
     const url = URL.createObjectURL(
-      new Blob([toCsv(result)], { type: "text/csv;charset=utf-8" }),
+      new Blob([toCsv({ ...result, rows })], {
+        type: "text/csv;charset=utf-8",
+      }),
     );
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -101,6 +117,20 @@ export function Results({
                 ? `Chart available · ${chart.unit}`
                 : "Table is the complete result view"}
             </span>
+          </div>
+          <div className="sort-summary" aria-live="polite">
+            <span>
+              {sort
+                ? `Sorted by ${result.columns[sort.column]} · column ${sort.column + 1} · ${sort.direction}`
+                : "Original result order · select a column heading to sort"}
+            </span>
+            {sort && (
+              <button onClick={() => setSort(undefined)}>Original order</button>
+            )}
+            <small>
+              Sorts retained rows only. Charts and CSV follow this order; NULL
+              stays last. Text sorts lexically.
+            </small>
           </div>
           <details className="result-source">
             <summary>SQL behind this result</summary>
@@ -199,14 +229,33 @@ export function Results({
                       #
                     </th>
                     {result.columns.map((column, index) => (
-                      <th scope="col" key={index}>
-                        {column}
+                      <th
+                        scope="col"
+                        key={index}
+                        aria-sort={
+                          sort?.column === index ? sort.direction : undefined
+                        }
+                      >
+                        <button
+                          className="column-sort"
+                          aria-label={`Sort ${column}, column ${index + 1}`}
+                          onClick={() => sortColumn(index)}
+                        >
+                          {column}{" "}
+                          <span aria-hidden="true">
+                            {sort?.column === index
+                              ? sort.direction === "ascending"
+                                ? "↑"
+                                : "↓"
+                              : "↕"}
+                          </span>
+                        </button>
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {result.rows.map((row, index) => (
+                  {rows.map((row, index) => (
                     <tr key={index}>
                       <td className="row-number">
                         {String(index + 1).padStart(2, "0")}
@@ -245,7 +294,7 @@ export function Results({
           {result.exactIntegersAsText && (
             <p className="integer-note">
               Integers outside JavaScript's safe range are shown as exact
-              decimal text.
+              decimal text. Sorting treats these as text, not numeric values.
             </p>
           )}
         </>

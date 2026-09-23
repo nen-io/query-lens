@@ -42,3 +42,7 @@ Every successful query carries captured SQL and request identity. Editor changes
 ## Refinement costs
 
 History adds at most200KiB of SQL text measured as UTF-8 input bytes, plus summaries and JavaScript string/object overhead; it does not keep ten bounded result copies. Exact-text deduplication scans at most ten strings. Eligible chart columns are derived over at most20 rows and40 columns; selected series remain inside the original envelope. UI selection/history does not change worker concurrency, native heap limits, execution watchdog or output limits. No benchmark is claimed.
+
+## Refinement resource cost
+
+Sorting copies an array of at most 500 row references and takes O(n log n) comparisons; row contents are not duplicated or persisted. The existing 1 MiB result bound limits total strings. Sorting only retained rows is explicitly disclosed for truncated results. Larger datasets need database ORDER BY and bounded pagination, not lifting browser caps or claiming global ordering.

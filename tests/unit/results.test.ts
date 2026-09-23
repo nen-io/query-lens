@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { chartData, csvCell, toCsv } from "../../src/domain/results";
+import {
+  chartData,
+  csvCell,
+  sortedRows,
+  toCsv,
+} from "../../src/domain/results";
 import type { QueryResult } from "../../src/domain/query-engine";
 const result: QueryResult = {
   columns: ["city", "revenue_cents"],
@@ -118,4 +123,61 @@ it("rejects invalid chart choices instead of coercing text, NULL or a missing co
       { labelIndex: 0, valueIndex: 1 },
     ),
   ).toBeNull();
+});
+
+describe("retained row sorting", () => {
+  it("sorts numbers numerically, leaves NULL last in both directions and preserves equal rows", () => {
+    const input = {
+      columns: ["label", "value"],
+      rows: [
+        ["ten", 10],
+        ["two", 2],
+        ["null", null],
+        ["same", 2],
+      ],
+    } satisfies Pick<QueryResult, "columns" | "rows">;
+    const snapshot = structuredClone(input);
+    expect(
+      sortedRows(input, { column: 1, direction: "ascending" }).map((r) => r[0]),
+    ).toEqual(["two", "same", "ten", "null"]);
+    expect(
+      sortedRows(input, { column: 1, direction: "descending" }).map(
+        (r) => r[0],
+      ),
+    ).toEqual(["ten", "two", "same", "null"]);
+    expect(input).toEqual(snapshot);
+    expect(sortedRows(input)).toBe(input.rows);
+  });
+  it("does not coerce text, handles empty strings and indexes duplicate aliases", () => {
+    const input = {
+      columns: ["value", "value"],
+      rows: [
+        ["z", "2"],
+        ["a", 10],
+        ["b", "10"],
+        ["c", ""],
+        ["d", null],
+      ],
+    } satisfies Pick<QueryResult, "columns" | "rows">;
+    expect(
+      sortedRows(input, { column: 1, direction: "ascending" }).map((r) => r[1]),
+    ).toEqual([10, "", "10", "2", null]);
+    expect(
+      sortedRows(input, { column: 0, direction: "ascending" }).map((r) => r[0]),
+    ).toEqual(["a", "b", "c", "d", "z"]);
+  });
+  it("keeps exact integer text intact and ignores invalid column choices", () => {
+    const input = {
+      columns: ["integer"],
+      rows: [["9223372036854775807"], ["9007199254740992"]],
+    };
+    expect(sortedRows(input, { column: 0, direction: "ascending" })).toEqual([
+      ["9007199254740992"],
+      ["9223372036854775807"],
+    ]);
+    for (const column of [-1, 1, 0.5, NaN])
+      expect(sortedRows(input, { column, direction: "ascending" })).toBe(
+        input.rows,
+      );
+  });
 });

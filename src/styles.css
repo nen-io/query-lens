@@ -1405,3 +1405,49 @@ footer {
     margin-top: 8px;
   }
 }
+
+.sort-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 12px 20px;
+  color: var(--muted);
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.sort-summary small {
+  flex-basis: 100%;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.sort-summary button {
+  padding: 6px 9px;
+  font-size: 12px;
+}
+.column-sort {
+  border: 0;
+  background: transparent;
+  padding: 5px 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+.column-sort span {
+  padding-left: 8px;
+}
+th[aria-sort] {
+  color: #d4e8ff;
+  background: #203749;
+}
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+.project-links a {
+  color: var(--blue);
+  text-underline-offset: 4px;
+  line-height: 1.6;
+  font-size: 12px;
+}

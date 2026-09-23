@@ -64,3 +64,13 @@ Before implementation, the actual chart-domain test ignored a requested second n
 All native SQLite policy/read-only/resource/cancellation and production-subpath tests remain in the suite. The screenshot journey now captures the history disclosure and chart selectors. `screenshots/query-lens-refinement-before.png` records the earlier real UI for comparison. No new persistence or network dependency was added.
 
 The history workflow additionally captures [expanded desktop history](screenshots/history-desktop.png) and [expanded mobile history](screenshots/history-mobile.png), checks390px overflow, and performs source/history restoration on the mobile layout.
+
+## September 23, 2026 iteration
+
+Fresh locked `npm ci` succeeded on Node 24.19.0. `npm run check` passed strict TypeScript, all domain/integration checks and the production build. Full browser suite: **93 unit tests and 15 Chromium journeys (including production worker/WASM/CSP)** in total.
+
+The sorting acceptance case failed on the absent real column control before implementation. Browser checks now verify numeric and NULL ordering, stable ties, keyboard activation/aria-sort, CSV matching displayed order, preserving sort on query failure, reset on a new accepted result, chart order, duplicate aliases by column index and exact source/walkthrough links at 320px. Unit tests cover mixed types, empty strings, exact integer text, stable ties, non-mutation and invalid column indices. Existing actual SQLite read-only policy, resource limits, timeout/reseed and cancellation checks still pass.
+
+New real browser captures: `screenshots/sorting-desktop.png` at 1440px and `screenshots/sorting-mobile.png` at 390px. Existing desktop/mobile screenshots were refreshed by their unchanged journeys. These screenshots were visually inspected; a palette mismatch in the initial Query Lens sort controls was caught and corrected before final capture. Existing browser/platform/scale limitations above still apply. Public deployment and exact-commit verification are separate publishing checks.
+
+Current official references consulted: [React state structure](https://react.dev/learn/choosing-the-state-structure), [Playwright assertions](https://playwright.dev/docs/test-assertions) and [SQLite query_only](https://www.sqlite.org/pragma.html#pragma_query_only). No dependencies were added or upgraded for this refinement.

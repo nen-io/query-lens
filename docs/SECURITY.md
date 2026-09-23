@@ -53,3 +53,7 @@ Use repository private vulnerability reporting when available, or contact the ow
 ## Refinement boundary
 
 Recent-query history is memory-only, capped at ten distinct already-validated successful SQL strings (each ≤20KiB) plus small summaries. It contains no result rows and is not sent or saved anywhere. Clear removes history references without claiming secure erasure of JavaScript memory; active/result SQL remains visible separately. Cancelled/stale worker replies cannot populate it. Loading history/source SQL requires a separate Run before execution and still passes the unchanged native SQL policy. History/source views render text through React. Chart choices accept only validated column positions with finite numeric rows; they add no HTML or SQL execution path.
+
+## Refinement boundary
+
+Sorting reads existing typed cells and renders through React text nodes; it never builds or executes SQL. CSV still passes every cell and header through formula-safe escaping. The original worker read-only gates, response bounds and termination watchdog are unchanged. Fixed public GitHub links carry no SQL or result parameters and use noreferrer.

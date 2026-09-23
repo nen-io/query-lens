@@ -71,3 +71,35 @@ export function chartData(
     })),
   };
 }
+
+export type ResultSort = {
+  column: number;
+  direction: "ascending" | "descending";
+};
+
+/** A view over bounded captured rows. NULL stays last; equal values keep capture order. */
+export function sortedRows(
+  result: Pick<QueryResult, "columns" | "rows">,
+  sort?: ResultSort,
+): Cell[][] {
+  if (
+    !sort ||
+    !Number.isInteger(sort.column) ||
+    sort.column < 0 ||
+    sort.column >= result.columns.length
+  )
+    return result.rows;
+  const direction = sort.direction === "ascending" ? 1 : -1;
+  return [...result.rows].sort((left, right) => {
+    const a = left[sort.column];
+    const b = right[sort.column];
+    if (a === b) return 0;
+    if (a === null) return 1;
+    if (b === null) return -1;
+    if (typeof a === "number" && typeof b === "number")
+      return (a < b ? -1 : 1) * direction;
+    if (typeof a !== typeof b)
+      return (typeof a === "number" ? -1 : 1) * direction;
+    return (a < b ? -1 : 1) * direction;
+  });
+}

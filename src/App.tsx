@@ -286,6 +286,22 @@ export default function App() {
         <footer>
           <span>QUERY LENS / Curiosity, with a query plan.</span>
           <span>Everything runs here. Nothing is uploaded.</span>
+          <nav className="project-links" aria-label="Project resources">
+            <a
+              href="https://github.com/nen-io/query-lens"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Source
+            </a>
+            <a
+              href="https://github.com/nen-io/query-lens/blob/main/docs/REVIEWER_GUIDE.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Engineering walkthrough
+            </a>
+          </nav>
         </footer>
       </main>
     </div>
